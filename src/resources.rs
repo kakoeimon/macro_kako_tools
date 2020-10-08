@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use macroquad::{Texture2D, load_texture, load_texture_from_bytes, set_texture_filter, FilterMode};
+use macroquad::{Texture2D, load_texture, set_texture_filter, FilterMode};
 
 use quad_snd::{
     decoder::{read_ogg},
@@ -33,12 +33,14 @@ impl Resources {
         set_texture_filter(texture, self.texture_filter_mode);
         self.textures.insert(path.to_owned(), texture);
     }
-
+    /* This requires a modification in the source of macroquad to work.
     pub fn load_texture_from_bytes(&mut self, name: &str, bytes: &[u8]) {
+        use macroquad::load_texture_from_bytes;
         let texture = load_texture_from_bytes(bytes);
         set_texture_filter(texture, self.texture_filter_mode);
         self.textures.insert(name.to_owned(), texture);
     }
+    */
 
     pub fn get_texture(&self, path: &str)-> Option<&Texture2D> {
         self.textures.get(path)

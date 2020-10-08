@@ -45,9 +45,11 @@ impl KaGame {
         self.resources.load_texture(path).await;
     }
 
+    /*
     pub fn load_texture_from_bytes(&mut self, name: &str, bytes: &[u8]) {
         self.resources.load_texture_from_bytes(name, bytes);
     }
+    */
 
     pub fn get_texture(&self, path: &str) -> Option<&Texture2D> {
         self.resources.get_texture(path)
