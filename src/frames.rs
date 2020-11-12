@@ -1,6 +1,6 @@
 use std::ops::Range;
 use std::collections::HashMap;
-use macroquad::{Vec2, Texture2D, get_frame_time, Rect};
+use macroquad::prelude::{Vec2, Texture2D, Rect};
 use hecs::{World, Entity};
 use crate::KaGame;
 use crate::KaSprite;
@@ -53,10 +53,14 @@ impl KaFrames {
     }
 
     pub fn set_range(&mut self, range: Range<usize>) {
-        self.current_frame = range.start;
-        self.range = range;
+        if self.range != range {
+            self.current_frame = range.start;
+            self.range = range;
+            
+            self.timer = 0.0;
+        }
         self.reset_end_fn();
-        self.timer = 0.0;
+        
     }
 
     pub fn set_range_and_end_fn(&mut self, range: Range<usize>, end_fn: fn(&mut World, &mut KaGame, Entity)) {
@@ -74,10 +78,10 @@ pub fn end_frame_null(_world: &mut World, _game: &mut KaGame, _entity: Entity) {
 
 }
 
-pub fn ka_sprite_frames(world: &mut World, game: &mut KaGame) {
+pub fn ka_sprite_frames(world: &mut World, game: &mut KaGame, delta: f32) {
     let mut fn_to_call: Vec<(fn(&mut World, &mut KaGame, Entity), Entity)> = Vec::new();
     for (e, (mut sprite, mut frames)) in world.query::<(&mut KaSprite, &mut KaFrames)>().iter() {
-        frames.timer += get_frame_time();
+        frames.timer += delta;
         if frames.timer >= frames.frame_time {
             frames.timer -= frames.frame_time;
             frames.current_frame += 1;

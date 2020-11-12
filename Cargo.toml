@@ -10,8 +10,11 @@ edition = "2018"
 #macroquad = "0.2.9"
 macroquad = {git = "https://github.com/not-fl3/macroquad", branch = "master"}
 #macroquad = {path = "../../macroquad"}
-#hecs = "0.2.14"
-hecs = {git = "https://github.com/Ralith/hecs"}
+#macroquad = {git = "https://github.com/not-fl3/macroquad", branch = "0.3"}
+hecs = "0.3"
+#hecs = {git = "https://github.com/Ralith/hecs"}
 quad-snd = {git = "https://github.com/not-fl3/quad-snd"}
+#quad-snd = {git = "https://github.com/not-fl3/quad-snd", rev = "b1eef89871c91039e6230a80f8d30a1cd4f96a36"}
 noise = "0.6"
-gilrs = "0.7.4"
+csv = "1.1"
+#gilrs = "0.7.4"

@@ -1,4 +1,4 @@
-use macroquad::{Vec2, Camera2D, set_camera};
+use macroquad::prelude::{Vec2, Camera2D, set_camera};
 
 
 pub struct KaCamera {
@@ -25,7 +25,7 @@ impl KaCamera {
     }
 
     pub fn screen_to_world(&self, pos: (f32, f32)) -> Vec2 {
-        use macroquad::{screen_width, screen_height, vec2};
+        use macroquad::prelude::{screen_width, screen_height, vec2};
         let screen_size = vec2(screen_width(), screen_height());
         let mut pos = Vec2::new(pos.0, pos.1);
         pos -= screen_size / 2.0;

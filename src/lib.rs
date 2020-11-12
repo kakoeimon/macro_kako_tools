@@ -32,5 +32,8 @@ pub mod shaders;
 
 pub mod noise;
 
+pub mod csv_loader;
+pub use csv_loader::*;
+
 
 

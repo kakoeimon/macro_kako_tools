@@ -1,9 +1,9 @@
 use std::collections::HashMap;
-use macroquad::{Texture2D, load_texture, set_texture_filter, FilterMode};
+use macroquad::prelude::{Texture2D, load_texture, set_texture_filter, FilterMode};
 
 use quad_snd::{
     decoder::{read_ogg},
-    mixer::Sound
+    mixer::{Sound, PlaybackStyle}
 };
 
 
@@ -28,27 +28,35 @@ impl Resources {
         self.texture_filter_mode = filter;
     }
     
-    pub async fn load_texture(&mut self, path: &str) {
+    pub async fn load_texture(&mut self, path: &str) -> Texture2D {
         let texture = load_texture(&path).await;
         set_texture_filter(texture, self.texture_filter_mode);
         self.textures.insert(path.to_owned(), texture);
+        texture
     }
-    /* This requires a modification in the source of macroquad to work.
-    pub fn load_texture_from_bytes(&mut self, name: &str, bytes: &[u8]) {
-        use macroquad::load_texture_from_bytes;
+
+    /*
+    pub fn load_texture_from_bytes(&mut self, name: &str, bytes: &[u8]) -> Texture2D{
+        use macroquad::prelude::load_texture_from_bytes;
         let texture = load_texture_from_bytes(bytes);
         set_texture_filter(texture, self.texture_filter_mode);
         self.textures.insert(name.to_owned(), texture);
+        texture
     }
     */
+
 
     pub fn get_texture(&self, path: &str)-> Option<&Texture2D> {
         self.textures.get(path)
     }
 
     
-    pub fn load_ogg(&mut self, name: &str, data: &[u8]) {
-        let sound = read_ogg(data).unwrap();
+    pub fn load_ogg(&mut self, name: &str, data: &[u8], looped: bool) {
+        let mut sound = read_ogg(data).unwrap();
+        if looped {
+            sound.playback_style = PlaybackStyle::Looped;
+        }
+        
         self.sounds.insert(name.to_owned(), sound);
     }
 

@@ -1,4 +1,4 @@
-use macroquad::Vec2;
+use macroquad::prelude::Vec2;
 
 use crate::*;
 

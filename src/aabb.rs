@@ -1,6 +1,6 @@
 use std::sync::{Mutex};
 
-use macroquad::{Vec2, draw_rectangle, get_frame_time};
+use macroquad::prelude::{Vec2};
 use hecs::{World, Entity};
 
 use crate::KaSprite;
@@ -153,7 +153,7 @@ impl KaAABB {
     }
 
     pub fn draw(pos: &Vec2, half_e: &Vec2) {
-        macroquad::draw_rectangle(pos.x() - half_e.x(), pos.y() - half_e.y(), half_e.x() * 2.0, half_e.y() * 2.0, macroquad::WHITE);
+        macroquad::prelude::draw_rectangle(pos.x() - half_e.x(), pos.y() - half_e.y(), half_e.x() * 2.0, half_e.y() * 2.0, macroquad::prelude::WHITE);
     }
 
     pub fn set_collision_layer(&mut self, bits: &[i32]) {
@@ -312,7 +312,7 @@ impl KaAABB {
     pub fn get_overlapping(world: &World, pos: &Vec2, half_e: &Vec2, mask: i32) -> Vec<Entity>{
         let mut overlapping: Vec<Entity> = Vec::new();
         for (e, aabb) in world.query::<&KaAABB>().iter() {
-            if aabb.solid && aabb.collision_layer & mask != 0 {
+            if aabb.collision_layer & mask != 0 {
                 let pos2 = aabb.pos.lock().unwrap();
                 if KaAABB::overlaps(pos, half_e, &pos2, &aabb.half_e) {
                     overlapping.push(e);
@@ -326,7 +326,7 @@ impl KaAABB {
     pub fn get_overlapping_with<T: hecs::Component>(world: &World, pos: &Vec2, half_e: &Vec2, mask: i32) -> Vec<Entity>{
         let mut overlapping: Vec<Entity> = Vec::new();
         for (e, (aabb, _)) in world.query::<(&KaAABB, &T)>().iter() {
-            if aabb.solid && aabb.collision_layer & mask != 0 {
+            if aabb.collision_layer & mask != 0 {
                 let pos2 = aabb.pos.lock().unwrap();
                 if KaAABB::overlaps(pos, half_e, &pos2, &aabb.half_e) {
                     overlapping.push(e);
@@ -447,7 +447,7 @@ pub fn ka_aabb_sense( world: &mut World) {
         let mask = if sensor.mask != 0 {sensor.mask} else {aabb1.collision_mask};
         let pos1 = aabb1.pos.lock().unwrap();
         for (e2, aabb2) in world.query::<&KaAABB>().iter() {
-            if e1.id() != e2.id() && aabb2.solid && aabb2.collision_layer & mask != 0 
+            if e1.id() != e2.id() && aabb2.collision_layer & mask != 0 
                 && !aabb1.have_exception(e2.id()) && !aabb2.have_exception(e1.id())
             {
                 let pos2 = aabb2.pos.lock().unwrap();
@@ -459,14 +459,14 @@ pub fn ka_aabb_sense( world: &mut World) {
     }
 }
 
-pub fn ka_aabb_update( world: &mut World) {
-    ka_aabb_move(world, get_frame_time());
+pub fn ka_aabb_update( world: &mut World, delta: f32) {
+    ka_aabb_move(world, delta);
     ka_aabb_sense(world);
 }
 
 
 pub fn ka_draw_collisions(world: &mut World) {
-    use macroquad::BLUE;
+    use macroquad::prelude::{draw_rectangle, BLUE};
     let mut color = BLUE;
     color.0[3] = 128;
     for (_, aabb) in world.query::<&KaAABB>().iter() {

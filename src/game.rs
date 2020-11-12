@@ -1,4 +1,4 @@
-use macroquad::{Texture2D, FilterMode};
+use macroquad::prelude::{Texture2D, FilterMode};
 use hecs::{World, EntityBuilder, Entity};
 use quad_snd::{mixer::SoundMixer};
 use crate::{Resources, Spawner, Despawner, Actions, ActionInput, ka_aabb_update};
@@ -29,8 +29,8 @@ impl KaGame {
         }
     }
 
-    pub fn update(&mut self, world: &mut World) {
-        ka_aabb_update(world);
+    pub fn update(&mut self, world: &mut World, delta: f32) {
+        ka_aabb_update(world, delta);
     }
 
     pub fn update_actions(&mut self) {
@@ -41,23 +41,25 @@ impl KaGame {
         self.resources.set_texture_filter_mode(filter);
     }
 
-    pub async fn load_texture(&mut self, path: &str) {
-        self.resources.load_texture(path).await;
+    pub async fn load_texture(&mut self, path: &str) -> Texture2D {
+        self.resources.load_texture(path).await
     }
 
     /*
-    pub fn load_texture_from_bytes(&mut self, name: &str, bytes: &[u8]) {
-        self.resources.load_texture_from_bytes(name, bytes);
+    pub fn load_texture_from_bytes(&mut self, name: &str, bytes: &[u8]) -> Texture2D {
+        self.resources.load_texture_from_bytes(name, bytes)
     }
     */
+    
+    
 
     pub fn get_texture(&self, path: &str) -> Option<&Texture2D> {
         self.resources.get_texture(path)
     }
 
     
-    pub fn load_ogg(&mut self, name: &str, data: &[u8]) {
-        self.resources.load_ogg(name, data);
+    pub fn load_ogg(&mut self, name: &str, data: &[u8], looped: bool) {
+        self.resources.load_ogg(name, data, looped);
     }
 
     pub fn play_sound(&mut self, name: &str) -> Result<SoundId, NoSoundError>{
